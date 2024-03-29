@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HodlInfo</title>
+    <link rel="stylesheet" href="connectTelegram.css" type="text/css">
+</head>
+<body>
+
+    <header>
+        <nav>
+        <div class="left">
+            <img class="hodl-logo" src="images/hodlinfo-logo.png">
+        </div>
+
+        <div class="right">
+            <ul>
+                <li>
+                    <label class="switch">
+                        <input type="checkbox" id="themeToggle">
+                        <span class="slider round"></span>
+                    </label>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    </header>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+            
+            var themeToggle = document.getElementById('themeToggle');
+            var body = document.body;
+
+            themeToggle.addEventListener('change', function () {
+                if (this.checked) {
+                    body.classList.add('light-theme');
+                } else {
+                    body.classList.remove('light-theme');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

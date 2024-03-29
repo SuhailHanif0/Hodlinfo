@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HodlInfo</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+
+    <!-- header and top nav bar here  -->
+
+    <header>
+        <nav>
+            <div class="left">
+                <img class="hodl-logo" src="images/hodlinfo-logo.png">
+            </div>
+            <div class="right">
+                <ul>
+                    <li class="dropdown">
+                        <button class="dropdown-btn">INR <span class="arrow">&#9660;</span></button>
+                        <ul class="dropdown-content">
+                            <li><a href="#">INR</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <button class="dropdown-btn">BTC <span class="arrow">&#9660;</span></button>
+                        <ul class="dropdown-content">
+                            <li><a href="#">BTC</a></li>
+                            <li><a href="#">ETH</a></li>
+                            <li><a href="#">USDT</a></li>
+                            <li><a href="#">XRP</a></li>
+                            <li><a href="#">TRX</a></li>
+                            <li><a href="#">DASH</a></li>
+                            <li><a href="#">ZEC</a></li>
+                            <li><a href="#">XEM</a></li>
+                            <li><a href="#">IOST</a></li>
+                            <li><a href="#">WIN</a></li>
+                            <li><a href="#">BTT</a></li>
+                            <li><a href="#">WRX</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="https://wazirx.com/invite/sp7pvbt6?utm_source=finstreet&utm_medium=affiliate&utm_campaign=regnow-btn"
+                            target="_blank" class="external-link">Buy BTC</a>
+                    </li>
+                    <li>
+                        <div class="countdown-container">
+                            <svg class="countdown-svg">
+                                <circle class="countdown-circle" cx="25" cy="25" r="20"></circle>
+                                <text class="countdown-text" x="25" y="25" text-anchor="middle" dy="0.3em">60</text>
+                            </svg>
+                        </div>
+
+                    </li>
+                    <li>
+                        <a href="connectTelegram.html" class="button"> <img src="images/telegram-logo.png"
+                                alt="Telegram Logo"> Connect Telegram </a>
+                    </li>
+                    <li>
+                        <label class="switch">
+                            <input type="checkbox" id="themeToggle">
+                            <span class="slider round"></span>
+                        </label>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- div for loading results -->
+
+    <div class="loader-wrapper" id="loader-wrapper">
+        <div id="loader"></div>
+    </div>
+
+    <!-- footer here  -->
+    <footer><div id="loader"></div>
+        <div class="footer">
+            <div>
+                <div class="footer-text">Copyright &#169 2024</div>
+                <div class="footer-text">hodlinfo.com</div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var dropdowns = document.querySelectorAll(".dropdown");
+
+            dropdowns.forEach(function (dropdown) {
+                var button = dropdown.querySelector(".dropdown-btn");
+                var content = dropdown.querySelector(".dropdown-content");
+                var items = content.querySelectorAll("li");
+
+                button.addEventListener("click", function () {
+                    content.classList.toggle("show");
+                });
+
+                
+                items.forEach(function (item) {
+                    item.addEventListener("click", function () {
+                        var text = item.textContent;
+                        button.textContent = text;
+                        content.classList.remove("show");
+
+                    });
+                });
+            });
+
+            var countdownText = document.querySelector(".countdown-text");
+            var duration = 60; 
+            var remainingTime = duration;
+
+            function updateCountdown() {
+                countdownText.textContent = remainingTime;
+                var progress = (duration - remainingTime) / duration;
+                var circumference = Math.PI * 80; 
+                var dashoffset = circumference * (1 - progress);
+                document.querySelector(".countdown-circle").style.strokeDashoffset = dashoffset;
+            }
+
+            function startCountdown() {
+                var timer = setInterval(function () {
+                    remainingTime--;
+                    updateCountdown();
+                    if (remainingTime <= 0) {
+                        clearInterval(timer);
+                        remainingTime = duration; 
+                        startCountdown(); 
+                    }
+                }, 1000);
+            }
+
+            startCountdown();
+
+            var themeToggle = document.getElementById('themeToggle');
+            var body = document.body;
+
+            themeToggle.addEventListener('change', function () {
+                if (this.checked) {
+                    body.classList.add('light-theme');
+                } else {
+                    body.classList.remove('light-theme');
+                }
+            });
+
+
+            function showLoader() {
+                document.querySelector(".loader-wrapper").style.display = "block";
+            }
+
+            function hideLoader() {
+                document.querySelector(".loader-wrapper").style.display = "block";
+            }
+
+            async function fetchData() {
+                try {
+
+                    showLoader();
+
+                    const response = await fetch('http://localhost:3000/tickers');
+                    const data = await response.json();
+
+                    hideLoader();
+
+                    renderDataAsTable(data);
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+
+                    hideLoader();
+                }
+            }
+
+            function renderDataAsTable(data) {
+    const container = document.getElementById('loader');
+    container.innerHTML = ''; 
+
+    const table = document.createElement('table');
+    table.classList.add('data-table'); 
+
+    
+    const headerRow = document.createElement('tr');
+    headerRow.innerHTML = `
+        <th>Ticker Name</th>
+        <th>Last Traded Price</th>
+        <th>Buy Price</th>
+        <th>Sell Price</th>
+        <th>High</th>
+        <th>Low</th>
+    `;
+    table.appendChild(headerRow);
+
+    // Create table body
+    data.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${item.ticker_name}</td>
+            <td>${item.last_traded_price}</td>
+            <td>${item.buy_price}</td>
+            <td>${item.sell_price}</td>
+            <td>${item.high}</td>
+            <td>${item.low}</td>
+        `;
+        table.appendChild(row);
+    });
+
+    container.appendChild(table);
+}
+
+
+            fetchData();
+        });
+
+    </script>
+</body>
+
+</html>
